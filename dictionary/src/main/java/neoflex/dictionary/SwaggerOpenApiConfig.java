@@ -1,0 +1,19 @@
+package neoflex.dictionary;
+
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
+
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Dictionary",
+                description = "Dictionary API", version = "0.0.0",
+                contact = @Contact(
+                        name = "Inyushin Michail"
+                )
+        )
+)
+
+public class SwaggerOpenApiConfig {
+
+}
