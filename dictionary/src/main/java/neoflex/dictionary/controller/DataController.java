@@ -19,8 +19,6 @@ import java.util.UUID;
 @RequestMapping("/api/v1/data")
 @Tag(name="DataController", description="Контролер для управлением Data")
 public class DataController {
-
-    private final DictionaryService dictionaryService;
     private DataService dataService;
 
     @Operation(
@@ -46,16 +44,9 @@ public class DataController {
             @ApiResponse(description = "возвращает Data saved или this dictionary does not exist если данного dictionary не существует")
             }
     )
-    @PostMapping("data")
+    @PostMapping
     public String saveData(@RequestBody(required = false) Data data) {
-        if (data == null) {
-            data = Data.defaultValue;
-        }
-        if (dictionaryService.findDictionary(data.getDictionary()) == null){
-            return "this dictionary does not exist";
-        }
-        dataService.saveData(data);
-        return "data saved";
+        return dataService.saveData(data);
     }
 
     @Operation(
@@ -64,18 +55,8 @@ public class DataController {
                     @ApiResponse(description = "возвращает Data deleted или all data already deleted если при удалении по умолчанию нет ни одного data или data does not exist если данного data не существует")
             }
     )
-    @DeleteMapping("data")
+    @DeleteMapping
     public String deleteData(@RequestBody(required = false) Data data) {
-        if (data == null) {
-            data = dataService.findFirst();
-            if (data == null) {
-                return "all data already deleted";
-            }
-        }
-        if (dataService.findData(data) == null) {
-            return "data does not exist";
-        }
-        dataService.deleteData(data);
-        return "data deleted";
+        return dataService.deleteData(data);
     }
 }

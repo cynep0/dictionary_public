@@ -12,7 +12,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/dictionary")
+@RequestMapping("/api/v1/dictionaries")
 @Tag(name="DictionaryController", description="Контролер для управлением Dictionary")
 public class DictionaryController {
 
@@ -32,13 +32,9 @@ public class DictionaryController {
                     @ApiResponse(description = "возвращает Dictionary saved")
             }
     )
-    @PostMapping("dictionaries")
+    @PostMapping
     public String saveDictionary(@RequestBody(required = false) Dictionary dictionary) {
-        if (dictionary == null){
-            dictionary = Dictionary.defaultValue;
-        }
-        dictionaryService.saveDictionary(dictionary);
-        return "Dictionary saved";
+        return dictionaryService.saveDictionary(dictionary);
     }
 
     @Operation(
@@ -47,18 +43,8 @@ public class DictionaryController {
             @ApiResponse(description = "возвращает Dictionary deleted или all dictionaries already deleted если при удалении по умолчанию нет ни одного dictionary или Dictionaries does not exist если данного dictionary не существует")
             }
     )
-    @DeleteMapping("dictionaries")
+    @DeleteMapping
     public String deleteDictionary(@RequestBody(required = false) Dictionary dictionary) {
-        if (dictionary == null){
-            dictionary = dictionaryService.findFirst();
-            if (dictionary == null){
-                return "All dictionaries already deleted";
-            }
-        }
-        if (dictionaryService.findDictionary(dictionary) == null){
-            return "Dictionary does not exist";
-        }
-        dictionaryService.deleteDictionary(dictionary);
-        return "Dictionary deleted";
+        return dictionaryService.deleteDictionary(dictionary);
     }
 }
