@@ -12,6 +12,10 @@ import java.util.List;
 public class DictionaryService {
     private final DictionaryRepository dictionaryRepository;
 
+    public Dictionary findDictionary(Dictionary dictionary) {
+        return dictionaryRepository.findById(dictionary.getId()).orElse(null);
+    }
+
     public List<Dictionary> findAllDictionaries(){
         return dictionaryRepository.findAll();
     }
@@ -22,5 +26,13 @@ public class DictionaryService {
 
     public void deleteDictionary(Dictionary dictionary){
         dictionaryRepository.delete(dictionary);
+    }
+
+    public Dictionary findFirst()
+    {
+        List<Dictionary> dictionaryList = dictionaryRepository.findAll();
+        if(dictionaryList.isEmpty())
+            return null;
+        return dictionaryList.getFirst();
     }
 }

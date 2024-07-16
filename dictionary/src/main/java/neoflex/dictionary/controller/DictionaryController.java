@@ -12,7 +12,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v0/dictionary")
+@RequestMapping("/api/v1/dictionary")
 @Tag(name="DictionaryController", description="Контролер для управлением Dictionary")
 public class DictionaryController {
 
@@ -32,8 +32,11 @@ public class DictionaryController {
                     @ApiResponse(description = "возвращает Dictionary saved")
             }
     )
-    @PostMapping("save_dictionary")
-    public String saveDictionary(@RequestBody Dictionary dictionary) {
+    @PostMapping("dictionaries")
+    public String saveDictionary(@RequestBody(required = false) Dictionary dictionary) {
+        if (dictionary == null){
+            dictionary = Dictionary.defaultValue;
+        }
         dictionaryService.saveDictionary(dictionary);
         return "Dictionary saved";
     }
@@ -41,11 +44,20 @@ public class DictionaryController {
     @Operation(
             summary = "удаляет Dictionary",
             responses = {
-            @ApiResponse(description = "возвращает Dictionary deleted")
+            @ApiResponse(description = "возвращает Dictionary deleted или all dictionaries already deleted если при удалении по умолчанию нет ни одного dictionary или Dictionaries does not exist если данного dictionary не существует")
             }
     )
-    @DeleteMapping("delete_dictionary")
-    public String deleteDictionary(@RequestBody Dictionary dictionary) {
+    @DeleteMapping("dictionaries")
+    public String deleteDictionary(@RequestBody(required = false) Dictionary dictionary) {
+        if (dictionary == null){
+            dictionary = dictionaryService.findFirst();
+            if (dictionary == null){
+                return "All dictionaries already deleted";
+            }
+        }
+        if (dictionaryService.findDictionary(dictionary) == null){
+            return "Dictionary does not exist";
+        }
         dictionaryService.deleteDictionary(dictionary);
         return "Dictionary deleted";
     }
