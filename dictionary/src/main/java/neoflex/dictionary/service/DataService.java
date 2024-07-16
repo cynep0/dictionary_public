@@ -14,6 +14,7 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class DataService {
+    private final DictionaryService dictionaryService;
     private final DataRepository dataRepository;
     private final DictionaryRepository dictionaryRepository;
 
@@ -33,12 +34,30 @@ public class DataService {
         return dataRepository.findAllByDictionary(dictionary);
     }
 
-    public Data saveData(Data data) {
-        return dataRepository.save(data);
+    public String saveData(Data data) {
+
+        if (data == null) {
+            data = Data.defaultValue;
+        }
+        if (dictionaryService.findDictionary(data.getDictionary()) == null){
+            return "this dictionary does not exist";
+        }
+        dataRepository.save(data);
+        return "data saved";
     }
 
-    public void deleteData(Data data) {
+    public String deleteData(Data data) {
+        if (data == null) {
+            data = findFirst();
+            if (data == null) {
+                return "all data already deleted";
+            }
+        }
+        if (findData(data) == null) {
+            return "data does not exist";
+        }
         dataRepository.delete(data);
+        return "data deleted";
     }
 
     public Data findFirst()
