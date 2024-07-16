@@ -9,7 +9,6 @@ import java.util.UUID;
 @Entity
 public class Data {
     @Id
-    @GeneratedValue
     private UUID id;
     @ManyToOne
     private Dictionary dictionary;
@@ -19,4 +18,12 @@ public class Data {
     @Schema(example = "значение 1")
     @Column
     private String value;
+    public Data(String code, String value) {
+        id = UUID.randomUUID();
+        dictionary = Dictionary.defaultValue;
+        this.code = code;
+        this.value = value;
+    }
+    public static Data defaultValue = new Data("defaultCode", "defaultValue");
+    public Data() {}
 }
